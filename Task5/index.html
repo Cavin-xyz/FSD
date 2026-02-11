@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Transaction System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💳 Online Payment System</h1>
+            <p class="subtitle">Transaction-Based Payment Simulation with COMMIT & ROLLBACK</p>
+        </header>
+
+        <!-- Transaction Status Alert -->
+        <div id="transactionAlert" class="transaction-alert hidden">
+            <div class="alert-icon" id="alertIcon"></div>
+            <div class="alert-content">
+                <div class="alert-title" id="alertTitle"></div>
+                <div class="alert-message" id="alertMessage"></div>
+            </div>
+            <button class="close-alert" id="closeAlert">&times;</button>
+        </div>
+
+        <div class="main-content">
+            <!-- Left Panel: Payment Form -->
+            <div class="payment-section">
+                <h2>💰 New Payment Transaction</h2>
+                
+                <form id="paymentForm">
+                    <div class="form-group">
+                        <label for="userAccount">Select User Account</label>
+                        <select id="userAccount" required>
+                            <option value="">-- Choose Account --</option>
+                        </select>
+                        <div class="account-balance" id="userBalance">Balance: $0.00</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="merchantAccount">Select Merchant</label>
+                        <select id="merchantAccount" required>
+                            <option value="">-- Choose Merchant --</option>
+                        </select>
+                        <div class="account-balance" id="merchantBalance">Balance: $0.00</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="paymentAmount">Payment Amount ($)</label>
+                        <input 
+                            type="number" 
+                            id="paymentAmount" 
+                            placeholder="0.00" 
+                            step="0.01" 
+                            min="0.01"
+                            required
+                        >
+                        <span class="error-message" id="amountError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="paymentDescription">Description</label>
+                        <input 
+                            type="text" 
+                            id="paymentDescription" 
+                            placeholder="Payment for services/products"
+                            required
+                        >
+                    </div>
+
+                    <div class="transaction-preview" id="transactionPreview">
+                        <h4>Transaction Preview:</h4>
+                        <div class="preview-row">
+                            <span>From:</span>
+                            <span id="previewFrom">-</span>
+                        </div>
+                        <div class="preview-row">
+                            <span>To:</span>
+                            <span id="previewTo">-</span>
+                        </div>
+                        <div class="preview-row highlight">
+                            <span>Amount:</span>
+                            <span id="previewAmount">$0.00</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="processBtn">
+                        <span id="btnIcon">🔒</span>
+                        <span id="btnText">Process Payment</span>
+                    </button>
+
+                    <div class="test-scenarios">
+                        <h4>🧪 Test Scenarios:</h4>
+                        <button type="button" class="btn-test" onclick="testSuccess()">✅ Test Success</button>
+                        <button type="button" class="btn-test" onclick="testInsufficientFunds()">❌ Test Insufficient Funds</button>
+                        <button type="button" class="btn-test" onclick="testSystemError()">⚠️ Test System Error</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Right Panel: Accounts Display -->
+            <div class="accounts-section">
+                <h2>💼 Account Balances</h2>
+                
+                <div class="account-category">
+                    <h3>User Accounts</h3>
+                    <div id="userAccountsList"></div>
+                </div>
+
+                <div class="account-category">
+                    <h3>Merchant Accounts</h3>
+                    <div id="merchantAccountsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="history-section">
+            <h2>📜 Transaction History</h2>
+            <div class="history-controls">
+                <button class="btn-filter active" data-filter="all">All</button>
+                <button class="btn-filter" data-filter="committed">✅ Committed</button>
+                <button class="btn-filter" data-filter="rolled-back">❌ Rolled Back</button>
+            </div>
+
+            <div class="transactions-list" id="transactionsList">
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <p>No transactions yet. Make your first payment!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaction Process Modal -->
+        <div id="transactionModal" class="modal hidden">
+            <div class="modal-content">
+                <h3>🔄 Processing Transaction</h3>
+                <div class="transaction-steps" id="transactionSteps">
+                    <!-- Steps will be added dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
