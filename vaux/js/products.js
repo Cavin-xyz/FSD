@@ -35,7 +35,7 @@ function renderProducts() {
   }
 
   grid.innerHTML = filtered.map((p, i) => `
-    <div class="product-card" style="animation-delay:${i * 0.06}s">
+    <div class="product-card" style="animation-delay:${i * 0.06}s" onclick="location.href='product.html?id=${p.id}'">
       ${buildBadge(p.badge)}
       <div class="product-img">${p.emoji}</div>
       <div class="product-body">
@@ -50,7 +50,7 @@ function renderProducts() {
             <span class="price">$${p.price}</span>
             ${p.originalPrice ? `<span class="price-old">$${p.originalPrice}</span>` : ''}
           </div>
-          <button class="add-btn" id="addbtn-${p.id}" onclick="addToCart(${p.id})">
+          <button class="add-btn" id="addbtn-${p.id}" onclick="event.stopPropagation(); addToCart(${p.id})">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <line x1="12" y1="5" x2="12" y2="19"/>
               <line x1="5" y1="12" x2="19" y2="12"/>
