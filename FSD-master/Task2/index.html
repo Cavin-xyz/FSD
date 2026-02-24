@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Student Management Dashboard</h1>
+            <p class="subtitle">View, Sort, and Filter Student Records</p>
+        </header>
+
+        <!-- Statistics Panel -->
+        <div class="stats-panel">
+            <div class="stat-card">
+                <h3 id="totalStudents">0</h3>
+                <p>Total Students</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalDepartments">0</h3>
+                <p>Departments</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="avgAge">0</h3>
+                <p>Average Age</p>
+            </div>
+        </div>
+
+        <!-- Department Count Section -->
+        <div class="department-stats">
+            <h2>Students Per Department</h2>
+            <div id="departmentCounts" class="dept-grid"></div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <div class="control-group">
+                <label for="departmentFilter">🏢 Filter by Department:</label>
+                <select id="departmentFilter">
+                    <option value="all">All Departments</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="sortBy">🔄 Sort By:</label>
+                <select id="sortBy">
+                    <option value="name-asc">Name (A-Z)</option>
+                    <option value="name-desc">Name (Z-A)</option>
+                    <option value="date-asc">Enrollment Date (Oldest First)</option>
+                    <option value="date-desc">Enrollment Date (Newest First)</option>
+                    <option value="age-asc">Age (Youngest First)</option>
+                    <option value="age-desc">Age (Oldest First)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="searchBox">🔍 Search:</label>
+                <input type="text" id="searchBox" placeholder="Search by name or email...">
+            </div>
+        </div>
+
+        <!-- Student Records Table -->
+        <div class="table-container">
+            <table id="studentTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Enrollment Date</th>
+                        <th>Age</th>
+                        <th>GPA</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p id="resultCount">Showing 0 students</p>
+        </div>
+    </div>
+
+    <script>
+        // Dummy Student Data
+        const studentsData = [
+            { id: 1001, name: "Alice Johnson", email: "alice.j@university.edu", department: "Computer Science", enrollmentDate: "2023-09-01", age: 20, gpa: 3.8 },
+            { id: 1002, name: "Bob Smith", email: "bob.smith@university.edu", department: "Mechanical Engineering", enrollmentDate: "2023-09-01", age: 21, gpa: 3.5 },
+            { id: 1003, name: "Charlie Brown", email: "charlie.b@university.edu", department: "Computer Science", enrollmentDate: "2024-01-15", age: 19, gpa: 3.9 },
+            { id: 1004, name: "Diana Prince", email: "diana.p@university.edu", department: "Business Administration", enrollmentDate: "2023-09-01", age: 22, gpa: 3.7 },
+            { id: 1005, name: "Ethan Hunt", email: "ethan.h@university.edu", department: "Electronics Engineering", enrollmentDate: "2024-01-15", age: 20, gpa: 3.6 },
+            { id: 1006, name: "Fiona Green", email: "fiona.g@university.edu", department: "Computer Science", enrollmentDate: "2023-09-01", age: 21, gpa: 4.0 },
+            { id: 1007, name: "George Wilson", email: "george.w@university.edu", department: "Civil Engineering", enrollmentDate: "2024-01-15", age: 23, gpa: 3.4 },
+            { id: 1008, name: "Hannah Lee", email: "hannah.l@university.edu", department: "Mathematics", enrollmentDate: "2023-09-01", age: 19, gpa: 3.9 },
+            { id: 1009, name: "Ian Malcolm", email: "ian.m@university.edu", department: "Physics", enrollmentDate: "2024-01-15", age: 22, gpa: 3.7 },
+            { id: 1010, name: "Julia Roberts", email: "julia.r@university.edu", department: "Chemistry", enrollmentDate: "2023-09-01", age: 20, gpa: 3.8 },
+            { id: 1011, name: "Kevin Hart", email: "kevin.h@university.edu", department: "Business Administration", enrollmentDate: "2024-01-15", age: 21, gpa: 3.5 },
+            { id: 1012, name: "Laura Palmer", email: "laura.p@university.edu", department: "Computer Science", enrollmentDate: "2024-08-20", age: 18, gpa: 3.6 },
+            { id: 1013, name: "Mike Ross", email: "mike.r@university.edu", department: "Mechanical Engineering", enrollmentDate: "2023-09-01", age: 22, gpa: 3.7 },
+            { id: 1014, name: "Nancy Drew", email: "nancy.d@university.edu", department: "Electronics Engineering", enrollmentDate: "2024-01-15", age: 20, gpa: 3.9 },
+            { id: 1015, name: "Oliver Twist", email: "oliver.t@university.edu", department: "Civil Engineering", enrollmentDate: "2023-09-01", age: 21, gpa: 3.3 },
+            { id: 1016, name: "Phoebe Buffay", email: "phoebe.b@university.edu", department: "Mathematics", enrollmentDate: "2024-08-20", age: 19, gpa: 3.8 },
+            { id: 1017, name: "Quinn Fabray", email: "quinn.f@university.edu", department: "Physics", enrollmentDate: "2023-09-01", age: 22, gpa: 3.6 },
+            { id: 1018, name: "Rachel Green", email: "rachel.g@university.edu", department: "Business Administration", enrollmentDate: "2024-01-15", age: 21, gpa: 3.7 },
+            { id: 1019, name: "Steve Rogers", email: "steve.r@university.edu", department: "Chemistry", enrollmentDate: "2024-08-20", age: 20, gpa: 3.9 },
+            { id: 1020, name: "Tina Turner", email: "tina.t@university.edu", department: "Computer Science", enrollmentDate: "2023-09-01", age: 23, gpa: 3.5 }
+        ];
+
+        let currentData = [...studentsData];
+
+        // Initialize Dashboard
+        function init() {
+            populateDepartmentFilter();
+            updateDepartmentCounts();
+            updateStatistics();
+            displayData(currentData);
+            attachEventListeners();
+        }
+
+        // Populate department filter dropdown
+        function populateDepartmentFilter() {
+            const departments = [...new Set(studentsData.map(s => s.department))].sort();
+            const filterSelect = document.getElementById('departmentFilter');
+            
+            departments.forEach(dept => {
+                const option = document.createElement('option');
+                option.value = dept;
+                option.textContent = dept;
+                filterSelect.appendChild(option);
+            });
+        }
+
+        // Update Department Statistics
+        function updateDepartmentCounts() {
+            const deptCounts = {};
+            studentsData.forEach(student => {
+                deptCounts[student.department] = (deptCounts[student.department] || 0) + 1;
+            });
+
+            const container = document.getElementById('departmentCounts');
+            container.innerHTML = '';
+
+            Object.entries(deptCounts)
+                .sort((a, b) => b[1] - a[1])
+                .forEach(([dept, count]) => {
+                    const card = document.createElement('div');
+                    card.className = 'dept-card';
+                    card.innerHTML = `
+                        <div class="dept-name">${dept}</div>
+                        <div class="dept-count">${count}</div>
+                        <div class="dept-label">students</div>
+                    `;
+                    container.appendChild(card);
+                });
+        }
+
+        // Update Overall Statistics
+        function updateStatistics() {
+            const totalStudents = studentsData.length;
+            const departments = new Set(studentsData.map(s => s.department));
+            const avgAge = (studentsData.reduce((sum, s) => sum + s.age, 0) / totalStudents).toFixed(1);
+
+            document.getElementById('totalStudents').textContent = totalStudents;
+            document.getElementById('totalDepartments').textContent = departments.size;
+            document.getElementById('avgAge').textContent = avgAge;
+        }
+
+        // Display Data in Table
+        function displayData(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="no-data">No students found</td></tr>';
+                document.getElementById('resultCount').textContent = 'Showing 0 students';
+                return;
+            }
+
+            data.forEach((student, index) => {
+                const row = document.createElement('tr');
+                row.style.animationDelay = `${index * 0.05}s`;
+                row.innerHTML = `
+                    <td>${student.id}</td>
+                    <td><strong>${student.name}</strong></td>
+                    <td>${student.email}</td>
+                    <td><span class="dept-badge">${student.department}</span></td>
+                    <td>${formatDate(student.enrollmentDate)}</td>
+                    <td>${student.age}</td>
+                    <td><span class="gpa-badge">${student.gpa.toFixed(1)}</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('resultCount').textContent = `Showing ${data.length} student${data.length !== 1 ? 's' : ''}`;
+        }
+
+        // Format Date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        // Filter and Sort Data
+        function filterAndSort() {
+            const departmentFilter = document.getElementById('departmentFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
+            const searchText = document.getElementById('searchBox').value.toLowerCase();
+
+            // Filter by department
+            let filtered = departmentFilter === 'all' 
+                ? [...studentsData] 
+                : studentsData.filter(s => s.department === departmentFilter);
+
+            // Filter by search
+            if (searchText) {
+                filtered = filtered.filter(s => 
+                    s.name.toLowerCase().includes(searchText) || 
+                    s.email.toLowerCase().includes(searchText)
+                );
+            }
+
+            // Sort
+            filtered.sort((a, b) => {
+                switch(sortBy) {
+                    case 'name-asc':
+                        return a.name.localeCompare(b.name);
+                    case 'name-desc':
+                        return b.name.localeCompare(a.name);
+                    case 'date-asc':
+                        return new Date(a.enrollmentDate) - new Date(b.enrollmentDate);
+                    case 'date-desc':
+                        return new Date(b.enrollmentDate) - new Date(a.enrollmentDate);
+                    case 'age-asc':
+                        return a.age - b.age;
+                    case 'age-desc':
+                        return b.age - a.age;
+                    default:
+                        return 0;
+                }
+            });
+
+            currentData = filtered;
+            displayData(currentData);
+        }
+
+        // Attach Event Listeners
+        function attachEventListeners() {
+            document.getElementById('departmentFilter').addEventListener('change', filterAndSort);
+            document.getElementById('sortBy').addEventListener('change', filterAndSort);
+            document.getElementById('searchBox').addEventListener('input', filterAndSort);
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
