@@ -1,13 +1,14 @@
 // ─────────────────────────────────────────
 // products.js — Product grid rendering & filtering
+// Fetches from backend API; falls back to data.js
 // ─────────────────────────────────────────
 
 let currentFilter = 'all';
-let searchQuery   = '';
+let searchQuery = '';
 
 /** Build star string from numeric rating */
 function buildStars(rating) {
-  const full  = Math.floor(rating);
+  const full = Math.floor(rating);
   const empty = 5 - full;
   return '★'.repeat(full) + '☆'.repeat(empty);
 }
@@ -19,12 +20,29 @@ function buildBadge(badge) {
   return `<div class="badge ${badge}">${label}</div>`;
 }
 
+/** Show a loading skeleton in the grid */
+function showLoadingSkeleton() {
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = Array.from({ length: 8 }).map(() => `
+    <div class="product-card" style="pointer-events:none;opacity:0.5;">
+      <div class="product-img" style="background:#eee;color:transparent;">⬜</div>
+      <div class="product-body">
+        <div class="product-category" style="background:#eee;height:12px;border-radius:4px;margin-bottom:8px;"></div>
+        <div class="product-name"    style="background:#eee;height:16px;border-radius:4px;margin-bottom:12px;"></div>
+        <div class="product-footer">
+          <div style="background:#eee;height:14px;width:60px;border-radius:4px;"></div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
 /** Render the full product grid based on active filter + search */
 function renderProducts() {
   const grid = document.getElementById('productGrid');
 
   const filtered = products.filter(p => {
-    const matchCat    = currentFilter === 'all' || p.category === currentFilter;
+    const matchCat = currentFilter === 'all' || p.category === currentFilter;
     const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchCat && matchSearch;
   });
@@ -92,6 +110,24 @@ function flashAddBtn(id) {
       </svg>
       Add`;
   }, 1400);
+}
+
+/**
+ * Load products from backend API.
+ * Falls back to the local `products` array (data.js) on any error.
+ */
+async function loadProductsFromAPI() {
+  showLoadingSkeleton();
+  try {
+    const data = await apiGet('/products');
+    // Replace the global products array with backend data
+    products.length = 0;
+    data.forEach(p => products.push(p));
+    console.log(`[API] Loaded ${products.length} products from backend.`);
+  } catch (err) {
+    console.warn('[API] Could not reach backend — using local data.js fallback.', err.message);
+  }
+  renderProducts();
 }
 
 /** Wire up the search input (called once on init) */

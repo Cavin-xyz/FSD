@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaux Backend - API Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .response {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            max-height: 300px;
+            overflow-y: auto;
+            word-break: break-word;
+        }
+
+        .response.success {
+            background: #f0fdf4;
+            border-color: #86efac;
+            color: #166534;
+        }
+
+        .response.error {
+            background: #fef2f2;
+            border-color: #fca5a5;
+            color: #991b1b;
+        }
+
+        .token-display {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            word-break: break-all;
+            margin-top: 10px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.connected {
+            background: #22c55e;
+        }
+
+        .status-indicator.disconnected {
+            background: #ef4444;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛒 Vaux Backend API Tester</h1>
+            <p>Test your Spring Boot + PostgreSQL API endpoints</p>
+            <div style="margin-top: 15px; font-size: 14px;">
+                <span class="status-indicator connected"></span>
+                <span id="status">Checking connection...</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Authentication Section -->
+            <div class="section">
+                <div class="section-title">🔐 Authentication</div>
+
+                <div class="grid-2">
+                    <div>
+                        <h3 style="font-size: 14px; margin-bottom: 10px;">Register</h3>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="regEmail" placeholder="user@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="regPassword" placeholder="password123">
+                        </div>
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" id="regFirstName" placeholder="John">
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" id="regLastName" placeholder="Doe">
+                        </div>
+                        <button class="btn-primary" onclick="register()">Register</button>
+                        <div id="regResponse" class="response" style="display: none;"></div>
+                    </div>
+
+                    <div>
+                        <h3 style="font-size: 14px; margin-bottom: 10px;">Login</h3>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="loginEmail" placeholder="user@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="loginPassword" placeholder="password123">
+                        </div>
+                        <button class="btn-primary" onclick="login()">Login</button>
+                        <div id="loginResponse" class="response" style="display: none;"></div>
+                        <div id="tokenDisplay"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Section -->
+            <div class="section">
+                <div class="section-title">📦 Products</div>
+
+                <div class="button-group" style="margin-bottom: 20px;">
+                    <button class="btn-primary" onclick="getAllProducts()">Get All Products</button>
+                    <button class="btn-primary" onclick="searchByCategory()">Search by Category</button>
+                    <button class="btn-primary" onclick="searchProducts()">Search Products</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Category (for search)</label>
+                    <input type="text" id="category" placeholder="fashion, beauty, home, accessories">
+                </div>
+
+                <div class="form-group">
+                    <label>Search Term</label>
+                    <input type="text" id="searchTerm" placeholder="Leather, Watch, etc...">
+                </div>
+
+                <div id="productsResponse" class="response" style="display: none;"></div>
+            </div>
+
+            <!-- Cart Section -->
+            <div class="section">
+                <div class="section-title">🛒 Cart Operations</div>
+
+                <div class="form-group">
+                    <label>⚠️ You must login first to use cart features</label>
+                    <p style="color: #666; font-size: 12px; margin-top: 5px;">Cart operations require a valid JWT token</p>
+                </div>
+
+                <div class="button-group" style="margin-bottom: 20px;">
+                    <button class="btn-primary" onclick="getCart()">Get Cart</button>
+                    <button class="btn-primary" onclick="clearCart()">Clear Cart</button>
+                </div>
+
+                <h3 style="font-size: 14px; margin-bottom: 10px;">Add to Cart</h3>
+                <div class="form-group">
+                    <label>Product ID</label>
+                    <input type="number" id="productId" placeholder="1" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" id="quantity" placeholder="1" value="1" min="1">
+                </div>
+                <button class="btn-primary" onclick="addToCart()">Add to Cart</button>
+
+                <div id="cartResponse" class="response" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080/api';
+        let authToken = localStorage.getItem('token');
+
+        // Check connection on page load
+        window.addEventListener('load', () => {
+            checkConnection();
+        });
+
+        async function checkConnection() {
+            try {
+                const response = await fetch(`${API_URL}/products`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (response.ok) {
+                    document.getElementById('status').textContent = 'Connected to backend ✓';
+                    document.querySelector('.status-indicator').classList.add('connected');
+                }
+            } catch (error) {
+                document.getElementById('status').textContent = 'Backend not running. Start Spring Boot!';
+                document.querySelector('.status-indicator').classList.add('disconnected');
+            }
+        }
+
+        async function register() {
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const firstName = document.getElementById('regFirstName').value;
+            const lastName = document.getElementById('regLastName').value;
+
+            if (!email || !password || !firstName || !lastName) {
+                showResponse('regResponse', 'Please fill all fields', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, firstName, lastName })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    authToken = data.token;
+                    localStorage.setItem('token', authToken);
+                    showResponse('regResponse', `Registered! Token saved.\n\n${JSON.stringify(data, null, 2)}`, true);
+                    updateTokenDisplay();
+                } else {
+                    showResponse('regResponse', data.error || 'Registration failed', false);
+                }
+            } catch (error) {
+                showResponse('regResponse', error.message, false);
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showResponse('loginResponse', 'Please enter email and password', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    authToken = data.token;
+                    localStorage.setItem('token', authToken);
+                    showResponse('loginResponse', `Logged in!\n\n${JSON.stringify(data, null, 2)}`, true);
+                    updateTokenDisplay();
+                } else {
+                    showResponse('loginResponse', 'Invalid credentials', false);
+                }
+            } catch (error) {
+                showResponse('loginResponse', error.message, false);
+            }
+        }
+
+        async function getAllProducts() {
+            try {
+                const response = await fetch(`${API_URL}/products`);
+                const data = await response.json();
+                showResponse('productsResponse', JSON.stringify(data, null, 2), response.ok);
+            } catch (error) {
+                showResponse('productsResponse', error.message, false);
+            }
+        }
+
+        async function searchByCategory() {
+            const category = document.getElementById('category').value;
+            if (!category) {
+                showResponse('productsResponse', 'Please enter a category', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/products/category/${category}`);
+                const data = await response.json();
+                showResponse('productsResponse', JSON.stringify(data, null, 2), response.ok);
+            } catch (error) {
+                showResponse('productsResponse', error.message, false);
+            }
+        }
+
+        async function searchProducts() {
+            const searchTerm = document.getElementById('searchTerm').value;
+            if (!searchTerm) {
+                showResponse('productsResponse', 'Please enter a search term', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/products/search?name=${searchTerm}`);
+                const data = await response.json();
+                showResponse('productsResponse', JSON.stringify(data, null, 2), response.ok);
+            } catch (error) {
+                showResponse('productsResponse', error.message, false);
+            }
+        }
+
+        async function addToCart() {
+            if (!authToken) {
+                showResponse('cartResponse', 'Please login first', false);
+                return;
+            }
+
+            const productId = document.getElementById('productId').value;
+            const quantity = document.getElementById('quantity').value;
+
+            if (!productId || !quantity) {
+                showResponse('cartResponse', 'Please enter product ID and quantity', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/cart/add`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ productId: parseInt(productId), quantity: parseInt(quantity) })
+                });
+
+                const data = await response.json();
+                showResponse('cartResponse', JSON.stringify(data, null, 2), response.ok);
+            } catch (error) {
+                showResponse('cartResponse', error.message, false);
+            }
+        }
+
+        async function getCart() {
+            if (!authToken) {
+                showResponse('cartResponse', 'Please login first', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/cart`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                const data = await response.json();
+                showResponse('cartResponse', JSON.stringify(data, null, 2), response.ok);
+            } catch (error) {
+                showResponse('cartResponse', error.message, false);
+            }
+        }
+
+        async function clearCart() {
+            if (!authToken) {
+                showResponse('cartResponse', 'Please login first', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/cart/clear`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                const data = await response.json();
+                showResponse('cartResponse', JSON.stringify(data, null, 2), response.ok);
+            } catch (error) {
+                showResponse('cartResponse', error.message, false);
+            }
+        }
+
+        function showResponse(elementId, message, isSuccess) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            element.className = 'response ' + (isSuccess ? 'success' : 'error');
+        }
+
+        function updateTokenDisplay() {
+            const display = document.getElementById('tokenDisplay');
+            if (authToken) {
+                display.innerHTML = `<div style="margin-top: 15px;"><strong>Token saved:</strong><div class="token-display">${authToken}</div></div>`;
+            }
+        }
+
+        // Load token on page load
+        updateTokenDisplay();
+    </script>
+</body>
+</html>

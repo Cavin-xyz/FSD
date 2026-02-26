@@ -1,0 +1,39 @@
+# Git ignore for Maven and IDE
+target/
+.classpath
+.project
+.settings/
+*.class
+*.jar
+*.wars
+*.ear
+.DS_Store
+.idea/
+*.iml
+*.swp
+*.swo
+*~
+.vscode/
+.env
+
+# Local properties
+local.properties
+
+# Build output
+out/
+build/
+dist/
+
+# Dependencies
+[Ll]ibrary/
+[Ll]ocal[Pp]ackages/
+[Oo]bj/
+[Bb]in/
+
+# IDE
+.vscode
+.vs
+.idea
+
+# Maven
+.maven
