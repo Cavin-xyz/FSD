@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class ProductService {
@@ -19,7 +19,7 @@ public class ProductService {
         return productRepository.findAll()
                 .stream()
                 .map(this::convertToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public ProductDTO getProductById(Long id) {
@@ -32,14 +32,14 @@ public class ProductService {
         return productRepository.findByCategory(category)
                 .stream()
                 .map(this::convertToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<ProductDTO> searchProducts(String name) {
         return productRepository.findByNameContainingIgnoreCase(name)
                 .stream()
                 .map(this::convertToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public ProductDTO addProduct(ProductDTO productDTO) {
@@ -65,18 +65,18 @@ public class ProductService {
     }
 
     private Product convertToEntity(ProductDTO dto) {
-        return new Product(
-                dto.getId(),
-                dto.getName(),
-                dto.getCategory(),
-                dto.getPrice(),
-                dto.getOriginalPrice(),
-                dto.getEmoji(),
-                dto.getRating(),
-                dto.getReviews(),
-                dto.getBadge(),
-                dto.getDescription(),
-                dto.getStock()
-        );
+        Product p = new Product();
+        // Never copy the DTO id — let the DB generate it
+        p.setName(dto.getName());
+        p.setCategory(dto.getCategory());
+        p.setPrice(dto.getPrice());
+        p.setOriginalPrice(dto.getOriginalPrice());
+        p.setEmoji(dto.getEmoji());
+        p.setRating(dto.getRating() != null ? dto.getRating() : 0.0);
+        p.setReviews(dto.getReviews() != null ? dto.getReviews() : 0);
+        p.setBadge(dto.getBadge());
+        p.setDescription(dto.getDescription());
+        p.setStock(dto.getStock() != null ? dto.getStock() : 100);
+        return p;
     }
 }
