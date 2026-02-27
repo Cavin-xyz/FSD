@@ -3,7 +3,7 @@
 // All backend communication goes through here
 // ─────────────────────────────────────────
 
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = '/api';
 
 /** Build auth headers — attaches JWT if one is stored */
 function _authHeaders() {

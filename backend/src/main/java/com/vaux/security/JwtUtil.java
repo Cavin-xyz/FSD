@@ -2,7 +2,6 @@ package com.vaux.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,7 +29,7 @@ public class JwtUtil {
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .signWith(getSigningKey())
                 .compact();
     }
 
@@ -57,10 +56,10 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }

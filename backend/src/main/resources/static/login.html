@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAUX — Sign In</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body class="auth-page">
+
+    <a class="auth-logo" href="index.html">VAUX</a>
+
+    <div class="auth-card">
+        <h1>Welcome back</h1>
+        <p class="subtitle">Sign in to your account or create a new one</p>
+
+        <!-- Tab switcher -->
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+            <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Create Account</button>
+        </div>
+
+        <!-- ── LOGIN form ── -->
+        <form class="auth-form active" id="loginForm" onsubmit="handleLogin(event)">
+            <div id="loginMsg" class="auth-msg"></div>
+
+            <div class="field">
+                <label for="loginEmail">Email address</label>
+                <input type="email" id="loginEmail" placeholder="you@example.com" required autocomplete="email">
+            </div>
+
+            <div class="field">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" required
+                    autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="auth-btn" id="loginBtn">Sign In</button>
+        </form>
+
+        <!-- ── REGISTER form ── -->
+        <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)">
+            <div id="registerMsg" class="auth-msg"></div>
+
+            <div class="form-row">
+                <div class="field">
+                    <label for="regFirst">First name</label>
+                    <input type="text" id="regFirst" placeholder="Jane" required autocomplete="given-name">
+                </div>
+                <div class="field">
+                    <label for="regLast">Last name</label>
+                    <input type="text" id="regLast" placeholder="Doe" required autocomplete="family-name">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="regEmail">Email address</label>
+                <input type="email" id="regEmail" placeholder="you@example.com" required autocomplete="email">
+            </div>
+
+            <div class="field">
+                <label for="regPassword">Password</label>
+                <input type="password" id="regPassword" placeholder="Min. 8 characters" required minlength="8"
+                    autocomplete="new-password">
+            </div>
+
+            <button type="submit" class="auth-btn" id="registerBtn">Create Account</button>
+        </form>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Redirect if already logged in
+        if (isLoggedIn()) window.location.href = 'index.html';
+
+        function switchTab(tab) {
+            document.getElementById('loginForm').classList.toggle('active', tab === 'login');
+            document.getElementById('registerForm').classList.toggle('active', tab === 'register');
+            document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+            document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+        }
+
+        function showMsg(id, text, type) {
+            const el = document.getElementById(id);
+            el.textContent = text;
+            el.className = `auth-msg ${type}`;
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.textContent = 'Signing in…';
+            try {
+                await authLogin(
+                    document.getElementById('loginEmail').value,
+                    document.getElementById('loginPassword').value
+                );
+                showMsg('loginMsg', '✓ Signed in! Redirecting…', 'success');
+                setTimeout(() => window.location.href = 'index.html', 800);
+            } catch (err) {
+                showMsg('loginMsg', err.message || 'Invalid email or password', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Sign In';
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const btn = document.getElementById('registerBtn');
+            btn.disabled = true;
+            btn.textContent = 'Creating account…';
+            try {
+                await authRegister(
+                    document.getElementById('regFirst').value,
+                    document.getElementById('regLast').value,
+                    document.getElementById('regEmail').value,
+                    document.getElementById('regPassword').value
+                );
+                showMsg('registerMsg', '✓ Account created! Redirecting…', 'success');
+                setTimeout(() => window.location.href = 'index.html', 800);
+            } catch (err) {
+                showMsg('registerMsg', err.message || 'Registration failed', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Create Account';
+            }
+        }
+    </script>
+</body>
+
+</html>

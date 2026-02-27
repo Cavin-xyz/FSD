@@ -1,6 +1,7 @@
 package com.vaux.controller;
 
 import com.vaux.dto.CartItemDTO;
+import com.vaux.repository.UserRepository;
 import com.vaux.service.CartService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -21,13 +21,22 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    private Long getUserId(UserDetails userDetails) {
+        return userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"))
+                .getId();
+    }
+
     @PostMapping("/add")
     public ResponseEntity<?> addToCart(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody AddToCartRequest request) {
         try {
             CartItemDTO item = cartService.addToCart(
-                    userDetails.getUsername().hashCode(),
+                    getUserId(userDetails),
                     request.getProductId(),
                     request.getQuantity());
             return ResponseEntity.ok(item);
@@ -39,10 +48,9 @@ public class CartController {
     @GetMapping
     public ResponseEntity<?> getCart(@AuthenticationPrincipal UserDetails userDetails) {
         try {
-            List<CartItemDTO> items = cartService.getCartItems(
-                    userDetails.getUsername().hashCode());
-            Double total = cartService.getCartTotal(
-                    userDetails.getUsername().hashCode());
+            Long userId = getUserId(userDetails);
+            List<CartItemDTO> items = cartService.getCartItems(userId);
+            Double total = cartService.getCartTotal(userId);
             return ResponseEntity.ok(new CartResponse(items, total));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
@@ -74,47 +82,78 @@ public class CartController {
     @DeleteMapping("/clear")
     public ResponseEntity<?> clearCart(@AuthenticationPrincipal UserDetails userDetails) {
         try {
-            cartService.clearCart(userDetails.getUsername().hashCode());
+            cartService.clearCart(getUserId(userDetails));
             return ResponseEntity.ok(new SuccessResponse("Cart cleared"));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
     static class AddToCartRequest {
         private Long productId;
         private Integer quantity;
+
+        public AddToCartRequest() {}
+        public AddToCartRequest(Long productId, Integer quantity) {
+            this.productId = productId;
+            this.quantity = quantity;
+        }
+
+        public Long getProductId() { return productId; }
+        public void setProductId(Long productId) { this.productId = productId; }
+        public Integer getQuantity() { return quantity; }
+        public void setQuantity(Integer quantity) { this.quantity = quantity; }
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
     static class UpdateCartRequest {
         private Integer quantity;
+
+        public UpdateCartRequest() {}
+        public UpdateCartRequest(Integer quantity) {
+            this.quantity = quantity;
+        }
+
+        public Integer getQuantity() { return quantity; }
+        public void setQuantity(Integer quantity) { this.quantity = quantity; }
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
     static class CartResponse {
         private List<CartItemDTO> items;
         private Double total;
+
+        public CartResponse() {}
+        public CartResponse(List<CartItemDTO> items, Double total) {
+            this.items = items;
+            this.total = total;
+        }
+
+        public List<CartItemDTO> getItems() { return items; }
+        public void setItems(List<CartItemDTO> items) { this.items = items; }
+        public Double getTotal() { return total; }
+        public void setTotal(Double total) { this.total = total; }
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
     static class ErrorResponse {
         private String error;
+
+        public ErrorResponse() {}
+        public ErrorResponse(String error) {
+            this.error = error;
+        }
+
+        public String getError() { return error; }
+        public void setError(String error) { this.error = error; }
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
     static class SuccessResponse {
         private String message;
+
+        public SuccessResponse() {}
+        public SuccessResponse(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() { return message; }
+        public void setMessage(String message) { this.message = message; }
     }
 }

@@ -45,17 +45,27 @@ public class AuthController {
         return ResponseEntity.ok(new SuccessResponse("Token is valid"));
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
     static class ErrorResponse {
         private String error;
+
+        public ErrorResponse() {}
+        public ErrorResponse(String error) {
+            this.error = error;
+        }
+
+        public String getError() { return error; }
+        public void setError(String error) { this.error = error; }
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
     static class SuccessResponse {
         private String message;
+
+        public SuccessResponse() {}
+        public SuccessResponse(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() { return message; }
+        public void setMessage(String message) { this.message = message; }
     }
 }
