@@ -129,7 +129,7 @@ Then paste:
 ```sql
 -- Insert products
 INSERT INTO products (name, category, price, original_price, emoji, rating, reviews, badge, stock) VALUES
-('Leather Weekend Bag', 'fashion', 320, NULL, '👜', 4.8, 124, 'new', 100),
+('Leather Weekend Bag', 'fashion', 320, 400, '👜', 4.8, 124, 'new', 100),
 ('Signature Eau de Parfum', 'beauty', 148, NULL, '🧴', 4.9, 89, NULL, 100),
 ('Minimal Gold Watch', 'accessories', 540, NULL, '⌚', 4.7, 52, NULL, 100),
 ('Cashmere Throw Blanket', 'home', 195, 265, '🧣', 4.6, 78, 'sale', 100),

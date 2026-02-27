@@ -10,7 +10,7 @@ function getParam(name) {
 
 /** Build star string */
 function buildStars(rating) {
-  const full  = Math.floor(rating);
+  const full = Math.floor(rating);
   const empty = 5 - full;
   return '★'.repeat(full) + '☆'.repeat(empty);
 }
@@ -36,10 +36,10 @@ function renderProductDetail() {
             <h1 style="margin:0 0 8px">${p.name}</h1>
             <div style="color:var(--muted); margin-bottom:12px">${p.category} · <span class="stars">${buildStars(p.rating)}</span> <span style="color:var(--muted)">(${p.reviews} reviews)</span></div>
             <div style="font-size:24px; margin-bottom:12px">
-              <strong>$${p.price}</strong>
-              ${p.originalPrice ? `<span class="price-old" style="margin-left:12px">$${p.originalPrice}</span>` : ''}
+              <strong>₹${p.price}</strong>
+              ${p.originalPrice ? `<span class="price-old" style="margin-left:12px">₹${p.originalPrice}</span>` : ''}
             </div>
-            ${p.badge ? `<div class="badge ${p.badge}" style="display:inline-block; margin-bottom:12px">${p.badge === 'sale' ? 'Sale' : (p.badge==='new'?'New':p.badge)}</div>` : ''}
+            ${p.badge ? `<div class="badge ${p.badge}" style="display:inline-block; margin-bottom:12px">${p.badge === 'sale' ? 'Sale' : (p.badge === 'new' ? 'New' : p.badge)}</div>` : ''}
             <p style="color:var(--muted); max-width:640px">A thoughtfully crafted product combining quality materials and timeless design. Each piece is inspected and prepared for long-term use.</p>
           </div>
           <div style="flex:0 0 220px; text-align:right">

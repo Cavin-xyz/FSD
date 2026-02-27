@@ -65,8 +65,8 @@ function renderProducts() {
         </div>
         <div class="product-footer">
           <div>
-            <span class="price">$${p.price}</span>
-            ${p.originalPrice ? `<span class="price-old">$${p.originalPrice}</span>` : ''}
+            <span class="price">₹${p.price}</span>
+            ${p.originalPrice ? `<span class="price-old">₹${p.originalPrice}</span>` : ''}
           </div>
           <button class="add-btn" id="addbtn-${p.id}" onclick="event.stopPropagation(); addToCart(${p.id})">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">

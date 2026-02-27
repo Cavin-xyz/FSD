@@ -4,9 +4,9 @@
 
 /** Re-render the cart sidebar contents */
 function renderCart() {
-  const items      = Object.values(cart);
+  const items = Object.values(cart);
   const cartItemsEl = document.getElementById('cartItems');
-  const cartFoot   = document.getElementById('cartFoot');
+  const cartFoot = document.getElementById('cartFoot');
 
   if (items.length === 0) {
     cartItemsEl.innerHTML = `
@@ -23,7 +23,7 @@ function renderCart() {
       <div class="ci-img">${item.emoji}</div>
       <div class="ci-info">
         <div class="ci-name">${item.name}</div>
-        <div class="ci-price">$${(item.price * item.qty).toFixed(2)}</div>
+        <div class="ci-price">₹${(item.price * item.qty).toFixed(2)}</div>
       </div>
       <div class="ci-controls">
         <div class="qty-ctrl">
@@ -38,8 +38,8 @@ function renderCart() {
 
   const subtotal = getSubtotal();
   cartFoot.style.display = 'flex';
-  document.getElementById('cartSubtotal').textContent = `$${subtotal.toFixed(2)}`;
-  document.getElementById('cartTotal').textContent    = `$${subtotal.toFixed(2)}`;
+  document.getElementById('cartSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
+  document.getElementById('cartTotal').textContent = `₹${subtotal.toFixed(2)}`;
 }
 
 /** Update header cart badge count */
@@ -58,9 +58,9 @@ function bumpCount() {
 
 /** Open / close cart sidebar */
 function toggleCart() {
-  const sidebar  = document.getElementById('cartSidebar');
-  const overlay  = document.getElementById('cartOverlay');
-  const isOpen   = sidebar.classList.toggle('open');
+  const sidebar = document.getElementById('cartSidebar');
+  const overlay = document.getElementById('cartOverlay');
+  const isOpen = sidebar.classList.toggle('open');
   overlay.classList.toggle('open', isOpen);
   document.body.style.overflow = isOpen ? 'hidden' : '';
 }
