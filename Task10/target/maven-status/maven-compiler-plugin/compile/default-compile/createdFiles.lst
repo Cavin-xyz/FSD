@@ -1,0 +1,5 @@
+com\task10\controller\StudentController.class
+com\task10\exception\ResourceNotFoundException.class
+com\task10\repository\StudentRepository.class
+com\task10\Task10Application.class
+com\task10\entity\Student.class
