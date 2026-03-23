@@ -1,0 +1,204 @@
+/* =========================================================
+   EmployeeMS – Spring MVC Task 9 Stylesheet
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --bg:        #0f1117;
+    --surface:   #1a1d27;
+    --surface2:  #22263a;
+    --accent:    #6c63ff;
+    --accent2:   #4ecca3;
+    --text:      #e2e8f0;
+    --muted:     #94a3b8;
+    --danger:    #ef4444;
+    --success:   #22c55e;
+    --border:    rgba(255,255,255,0.07);
+    --radius:    12px;
+    --shadow:    0 4px 24px rgba(0,0,0,0.4);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* ---- Navbar ---- */
+.navbar {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem 2.5rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+}
+.brand {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-right: auto;
+    letter-spacing: -0.5px;
+}
+.navbar a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.navbar a:hover { color: var(--text); }
+
+/* ---- Container ---- */
+.container {
+    max-width: 1100px;
+    margin: 2.5rem auto;
+    padding: 0 1.5rem;
+}
+h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ---- Alerts ---- */
+.alert {
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius);
+    margin-bottom: 1.25rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+.alert-success { background: rgba(34,197,94,0.12); border: 1px solid var(--success); color: var(--success); }
+.alert-error   { background: rgba(239,68,68,0.12);  border: 1px solid var(--danger);  color: var(--danger); }
+
+/* ---- Employee Table ---- */
+.employee-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+.employee-table thead tr {
+    background: linear-gradient(90deg, var(--accent), #4f46e5);
+}
+.employee-table th {
+    padding: 0.9rem 1.1rem;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #fff;
+}
+.employee-table td {
+    padding: 0.85rem 1.1rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+    color: var(--text);
+    vertical-align: middle;
+}
+.employee-table tbody tr:last-child td { border-bottom: none; }
+.employee-table tbody tr:hover { background: var(--surface2); transition: background 0.2s; }
+.empty { text-align: center; color: var(--muted); padding: 2rem !important; }
+
+/* ---- Badge ---- */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background: rgba(108,99,255,0.18);
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 600;
+    border: 1px solid rgba(108,99,255,0.3);
+}
+
+/* ---- Buttons ---- */
+.btn {
+    display: inline-block;
+    padding: 0.4rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s, transform 0.1s;
+    margin-right: 0.4rem;
+}
+.btn:hover  { opacity: 0.85; transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn-view   { background: var(--accent);  color: #fff; }
+.btn-delete { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+
+/* ---- Detail Card ---- */
+.detail-card {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
+.detail-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+}
+.detail-info h2 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+.info-table { margin-top: 1rem; border-collapse: collapse; width: 100%; }
+.info-table th, .info-table td { padding: 0.55rem 1rem; font-size: 0.9rem; text-align: left; }
+.info-table th { color: var(--muted); font-weight: 500; width: 120px; }
+.info-table tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
+.action-row { margin-top: 1.5rem; display: flex; gap: 0.5rem; }
+
+/* ---- Add Form ---- */
+.emp-form {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 2rem;
+    max-width: 560px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
+.form-group { margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.form-group label { font-size: 0.84rem; font-weight: 600; color: var(--muted); }
+.form-group input,
+.form-group select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.92rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.form-group input:focus,
+.form-group select:focus { border-color: var(--accent); }
+.form-group select option { background: var(--surface2); }
