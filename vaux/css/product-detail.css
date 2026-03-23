@@ -1,0 +1,448 @@
+/* ─────────────────────────────────────────
+   product-detail.css — Single product page
+   ───────────────────────────────────────── */
+
+/* ── Breadcrumb ── */
+.pd-breadcrumb {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 2rem 2rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.pd-breadcrumb a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.pd-breadcrumb a:hover {
+    color: var(--accent);
+}
+
+.pd-breadcrumb .sep {
+    opacity: 0.4;
+}
+
+.pd-breadcrumb .current {
+    color: var(--text);
+}
+
+/* ── Main layout ── */
+.pd-layout {
+    max-width: var(--max-w);
+    margin: 2rem auto 6rem;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+/* ── Left — image panel ── */
+.pd-image-panel {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+}
+
+.pd-image-frame {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9rem;
+    min-height: 400px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.pd-image-frame:hover {
+    border-color: rgba(232, 201, 126, 0.4);
+    box-shadow: 0 0 60px rgba(232, 201, 126, 0.08);
+}
+
+/* Corner accent lines */
+.pd-image-frame::before,
+.pd-image-frame::after {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-color: rgba(232, 201, 126, 0.35);
+    border-style: solid;
+}
+
+.pd-image-frame::before {
+    top: 14px;
+    left: 14px;
+    border-width: 1px 0 0 1px;
+}
+
+.pd-image-frame::after {
+    bottom: 14px;
+    right: 14px;
+    border-width: 0 1px 1px 0;
+}
+
+.pd-emoji {
+    display: inline-block;
+    animation: float 5s ease-in-out infinite;
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5));
+    line-height: 1;
+}
+
+/* Ambient glow behind emoji */
+.pd-image-frame .pd-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(232, 201, 126, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* ── Right — info panel ── */
+.pd-info {
+    padding-top: 0.5rem;
+}
+
+.pd-category {
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.pd-category::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+    flex-shrink: 0;
+}
+
+.pd-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1.2rem;
+    letter-spacing: -0.02em;
+}
+
+/* ── Rating ── */
+.pd-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.6rem;
+}
+
+.pd-stars {
+    color: var(--accent);
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+}
+
+.pd-review-count {
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+
+/* ── Price block ── */
+.pd-price-block {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.6rem;
+    padding-bottom: 1.6rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.pd-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.pd-price-old {
+    font-size: 1rem;
+    color: var(--muted);
+    text-decoration: line-through;
+}
+
+.pd-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    line-height: 1;
+}
+
+.pd-badge.sale {
+    background: var(--danger);
+    color: #fff;
+}
+
+.pd-badge.new {
+    background: var(--green);
+    color: #fff;
+}
+
+/* ── Description ── */
+.pd-desc {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+/* ── Quantity selector ── */
+.pd-qty-row {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.pd-qty-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-shrink: 0;
+}
+
+.pd-qty-ctrl {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.pd-qty-btn {
+    background: var(--surface2);
+    border: none;
+    color: var(--text);
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pd-qty-btn:hover {
+    background: var(--accent);
+    color: #0e0e0e;
+}
+
+.pd-qty-val {
+    min-width: 44px;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    padding: 0 0.5rem;
+    line-height: 36px;
+}
+
+/* ── Add to cart CTA ── */
+.pd-add-btn {
+    width: 100%;
+    padding: 1.1rem 2rem;
+    background: var(--accent);
+    color: #0e0e0e;
+    border: none;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s,
+        transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.pd-add-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transition: left 0.4s ease;
+}
+
+.pd-add-btn:hover::after {
+    left: 150%;
+}
+
+.pd-add-btn:hover {
+    background: var(--accent2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(232, 201, 126, 0.35);
+}
+
+.pd-add-btn:active {
+    transform: scale(0.98);
+}
+
+.pd-add-btn.added {
+    background: var(--green);
+    box-shadow: 0 0 20px rgba(92, 186, 138, 0.4);
+}
+
+/* ── Perks row ── */
+.pd-perks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.pd-perk {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+
+.pd-perk-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+/* ── Details accordion ── */
+.pd-details {
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.pd-detail-row {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.pd-detail-key {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    width: 100px;
+    flex-shrink: 0;
+    padding-top: 2px;
+}
+
+.pd-detail-val {
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* ── Back link ── */
+.pd-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    margin-top: 3rem;
+}
+
+.pd-back:hover {
+    color: var(--accent);
+}
+
+.pd-back:hover .pd-back-arrow {
+    transform: translateX(-4px);
+}
+
+.pd-back-arrow {
+    transition: transform 0.2s;
+}
+
+/* ── Not found ── */
+.pd-not-found {
+    max-width: var(--max-w);
+    margin: 6rem auto;
+    padding: 0 2rem;
+    text-align: center;
+    color: var(--muted);
+}
+
+.pd-not-found h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--text);
+    margin-bottom: 1rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .pd-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin-bottom: 4rem;
+    }
+
+    .pd-image-panel {
+        position: static;
+    }
+
+    .pd-image-frame {
+        font-size: 6rem;
+        min-height: 260px;
+    }
+
+    .pd-name {
+        font-size: 2rem;
+    }
+
+    .pd-perks {
+        grid-template-columns: 1fr;
+    }
+}
